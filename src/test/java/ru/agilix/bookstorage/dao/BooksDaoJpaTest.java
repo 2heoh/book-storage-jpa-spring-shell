@@ -109,7 +109,9 @@ public class BooksDaoJpaTest {
     void shouldDeleteBookById() {
         val existingBook = bookDao.getById(1);
         em.detach(existingBook);
-        assertThrows( BookNotFoundException.class, () -> {bookDao.delete(1); bookDao.getById(1);});
+
+        bookDao.delete(1);
+        assertThrows( BookNotFoundException.class, () ->  bookDao.getById(1));
     }
 
     @Test
