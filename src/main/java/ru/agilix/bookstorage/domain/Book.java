@@ -3,7 +3,6 @@ package ru.agilix.bookstorage.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -14,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="books")
+@Table(name = "books")
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +22,7 @@ public class Book {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "description", nullable = true)
+    @Column(name = "description")
     private String description;
 
     @ManyToMany(targetEntity = Author.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -32,9 +31,11 @@ public class Book {
     @Fetch(FetchMode.SUBSELECT)
     private List<Author> authors;
 
+    @ManyToOne(targetEntity = Genre.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "genre_id")
+    private Genre genre;
 
-    @OneToMany(targetEntity = Genre.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "id")
-    @Fetch(FetchMode.SUBSELECT)
-    private List<Genre> genres;
+    @OneToMany(targetEntity = Comment.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "book_id")
+    private List<Comment> comments;
 }

@@ -1,34 +1,29 @@
 package ru.agilix.bookstorage.ui;
 
+import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.agilix.bookstorage.dao.dsl.Create;
 import ru.agilix.bookstorage.domain.Author;
 import ru.agilix.bookstorage.domain.Book;
+import ru.agilix.bookstorage.domain.Comment;
 import ru.agilix.bookstorage.domain.Genre;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class ConsoleUIServiceTest {
-    private UiService ui;
-
-    @Mock
-    private UpdateService updateService;
+public class MessageCreatorServiceTests {
+    private MessageCreatorService ui;
 
     @BeforeEach
     void setUp() {
-        ui = new ConsoleUiService(updateService);
+        ui = new TextOutputService();
     }
 
     @Test
@@ -96,29 +91,6 @@ public class ConsoleUIServiceTest {
 
     }
 
-    @Test
-    void shouldReturnUpdatedBook() {
-        Author author = new Author(1, "author");
-        Genre genre = new Genre(1, "genre");
-        Book existingBook = Create.Book()
-                .Id(1)
-                .Title("title")
-                .Description("description")
-                .build();
-        given(updateService.getNewValueFor("title", "title")).willReturn("new title");
-        given(updateService.getNewValueFor("description", "description")).willReturn("new description");
-        given(updateService.getNewAuthor(any())).willReturn(author);
-        given(updateService.getNewGenre(any())).willReturn(genre);
-
-        Book updatedBook = ui.getUpdatedBookInfo(existingBook, new ArrayList<>(), new ArrayList<>());
-
-        verify(updateService, times(2)).getNewValueFor(any(), any());
-        verify(updateService, times(1)).getNewAuthor(any());
-        verify(updateService, times(1)).getNewGenre(any());
-        assertThat(updatedBook.getTitle()).isEqualTo("new title");
-        assertThat(updatedBook.getDescription()).isEqualTo("new description");
-    }
-
 
     @Test
     void shouldRenderListOfAuthors() {
@@ -153,5 +125,51 @@ public class ConsoleUIServiceTest {
                 .contains("List of genres")
                 .contains("One")
                 .contains("Two");
+    }
+
+    @Test
+    void showListOfComments() throws ParseException {
+        Comment first = Create.Comment()
+                .Id(1)
+                .Author("John Doe")
+                .Text("first")
+                .Date("2021-01-19 10:00:00")
+                .build();
+
+        Comment second = Create.Comment()
+                .Id(2)
+                .Author("John Doe")
+                .Text("second")
+                .Date("2021-01-19 11:00:00")
+                .build();
+
+        val comments = List.of(first, second);
+
+
+        val result = ui.showListOfComments(comments);
+
+        assertThat(result)
+                .contains("Comments:")
+                .contains("#1 'John Doe' said at 2021-01-19 10:00:00")
+                .contains("first")
+                .contains("#2 'John Doe' said at 2021-01-19 11:00:00")
+                .contains("second");
+    }
+
+    @Test
+    void shouldDisplayNewComment() throws ParseException {
+        val comment = Create.Comment()
+                .Id(1)
+                .Text("text")
+                .Author("author")
+                .Date("2021-01-19 19:00:00")
+                .build();
+
+        final var result = ui.showCommentInfo(comment);
+
+        assertThat(result)
+                .contains("New comment")
+                .contains("author said at 2021-01-19 19:00:00")
+                .contains("text");
     }
 }

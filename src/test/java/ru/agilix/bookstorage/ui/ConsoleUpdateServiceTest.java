@@ -1,5 +1,6 @@
 package ru.agilix.bookstorage.ui;
 
+import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -55,12 +56,27 @@ class ConsoleUpdateServiceTest {
         Author pushkin = new Author(2, "Pushkin");
         List<Author> authors = List.of(gogol, pushkin);
 
-        Author chosenAuthor = updateService.getNewAuthor(authors);
+        val chosenAuthors = updateService.getNewAuthor(authors);
 
-        verify(ioService, times(1)).putString("Enter new author id from list above: ");
+        verify(ioService, times(1)).putString("Enter new author (or authors separated by coma) id from list above: ");
         verify(ioService, times(1)).putString("1 - Gogol");
         verify(ioService, times(1)).putString("2 - Pushkin");
-        assertThat(chosenAuthor).isEqualTo(gogol);
+        assertThat(chosenAuthors).isEqualTo(List.of(gogol));
+    }
+
+    @Test
+    void shouldReturnBothAuthors() {
+        given(ioService.getString()).willReturn("1,2");
+        Author gogol = new Author(1, "Gogol");
+        Author pushkin = new Author(2, "Pushkin");
+        List<Author> authors = List.of(gogol, pushkin);
+
+        val chosenAuthors = updateService.getNewAuthor(authors);
+
+        verify(ioService, times(1)).putString("Enter new author (or authors separated by coma) id from list above: ");
+        verify(ioService, times(1)).putString("1 - Gogol");
+        verify(ioService, times(1)).putString("2 - Pushkin");
+        assertThat(chosenAuthors).isEqualTo(authors);
     }
 
 

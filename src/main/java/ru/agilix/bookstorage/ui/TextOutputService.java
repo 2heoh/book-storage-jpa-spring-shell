@@ -4,18 +4,14 @@ import de.vandermeer.asciitable.AsciiTable;
 import org.springframework.stereotype.Service;
 import ru.agilix.bookstorage.domain.Author;
 import ru.agilix.bookstorage.domain.Book;
+import ru.agilix.bookstorage.domain.Comment;
 import ru.agilix.bookstorage.domain.Genre;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ConsoleUiService implements UiService {
-    private final UpdateService updateService;
-
-    public ConsoleUiService(UpdateService updateService) {
-        this.updateService = updateService;
-    }
+public class TextOutputService implements MessageCreatorService {
 
     @Override
     public String showBooksList(List<Book> books) {
@@ -48,12 +44,8 @@ public class ConsoleUiService implements UiService {
             }
             details.add(authors);
         }
-        if (!book.getGenres().isEmpty()) {
-            String genres = "genre: ";
-            for (Genre genre : book.getGenres()) {
-                genres += genre.getName() + " ";
-            }
-            details.add(genres);
+        if (book.getGenre() != null) {
+            details.add("genre: " + book.getGenre().getName() + " ");
         }
         if (book.getDescription() == null || book.getDescription().equals("")) {
             details.add("description is not set");
@@ -83,14 +75,6 @@ public class ConsoleUiService implements UiService {
         return table.render();
     }
 
-    @Override
-    public Book getUpdatedBookInfo(Book existingBook, List<Author> authors, List<Genre> genres) {
-        String newTitle = updateService.getNewValueFor("title", existingBook.getTitle());
-        String newDescription = updateService.getNewValueFor("description", existingBook.getDescription());
-        Author newAuthors = updateService.getNewAuthor(authors);
-        Genre newGenres = updateService.getNewGenre(genres);
-        return new Book(existingBook.getId(), newTitle, newDescription, List.of(newAuthors), List.of(newGenres));
-    }
 
     @Override
     public String showBookCreatedMessage(Book inserted) {
@@ -143,5 +127,37 @@ public class ConsoleUiService implements UiService {
         return table.render();
 
     }
+
+    @Override
+    public String showListOfComments(List<Comment> comments) {
+
+        String result = renderMessage("Comments:") + "\n";
+
+        for (Comment comment : comments) {
+
+            result += renderMessage(String.format(
+                    "#%s '%s' said at %s: %s",
+                    comment.getId(),
+                    comment.getAuthor(),
+                    comment.getDate(),
+                    comment.getText())) + "\n";
+        }
+
+        return result;
+    }
+
+    @Override
+    public String showCommentInfo(Comment comment) {
+        AsciiTable table = new AsciiTable();
+        table.addRule();
+        table.addRow(null, "New comment #" + comment.getId());
+        table.addRule();
+        table.addRow(
+                String.format("%s said at %s", comment.getAuthor(), comment.getDate()),
+                comment.getText());
+        table.addRule();
+        return table.render();
+    }
+
 
 }

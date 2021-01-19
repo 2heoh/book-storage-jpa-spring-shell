@@ -1,7 +1,6 @@
 package ru.agilix.bookstorage.dao;
 
 import org.springframework.stereotype.Repository;
-import ru.agilix.bookstorage.domain.Author;
 import ru.agilix.bookstorage.domain.Book;
 
 import javax.persistence.EntityManager;
@@ -22,8 +21,14 @@ public class BooksDaoJpa implements BooksDao {
     }
 
     @Override
-    public Book create(String title) {
-        return null;
+    public Book save(Book book) {
+
+        if (book.getId() == 0) {
+            em.persist(book);
+            return book;
+        } else {
+            return em.merge(book);
+        }
     }
 
     @Override
@@ -36,15 +41,7 @@ public class BooksDaoJpa implements BooksDao {
     }
 
     @Override
-    public void save(Book updatedBook) {
-
-    }
-
-    @Override
     public void delete(int id) {
-
-        getById(id);
-
         Query query = em.createQuery("delete from Book b where b.id=:id");
         query.setParameter("id", id);
         query.executeUpdate();

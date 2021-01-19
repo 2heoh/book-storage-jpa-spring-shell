@@ -4,7 +4,9 @@ import org.springframework.stereotype.Service;
 import ru.agilix.bookstorage.domain.Author;
 import ru.agilix.bookstorage.domain.Genre;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ConsoleUpdateService implements UpdateService {
@@ -22,18 +24,27 @@ public class ConsoleUpdateService implements UpdateService {
     }
 
     @Override
-    public Author getNewAuthor(List<Author> authors) {
+    public List<Author> getNewAuthor(List<Author> authors) {
         for (Author author : authors) {
             readerWriter.putString(String.format("%d - %s", author.getId(), author.getName()));
         }
-        readerWriter.putString("Enter new author id from list above: ");
+        readerWriter.putString("Enter new author (or authors separated by coma) id from list above: ");
 
-        int authorId = Integer.parseInt(readerWriter.getString());
+        List<Author> result = new ArrayList<>();
+        for (String id : readerWriter.getString().split(",")) {
+            final var authorId = Integer.parseInt(id);
 
-        if (authors.stream().noneMatch(a -> a.getId() == authorId))
+            for (Author author: authors) {
+                if (author.getId() == authorId) {
+                    result.add(author);
+                }
+            }
+        }
+
+        if (result.isEmpty())
             throw new NoSuchAuthor();
 
-        return authors.stream().filter( a -> a.getId() == authorId).findFirst().get();
+        return result;
     }
 
     @Override

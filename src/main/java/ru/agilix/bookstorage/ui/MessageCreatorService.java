@@ -2,16 +2,15 @@ package ru.agilix.bookstorage.ui;
 
 import ru.agilix.bookstorage.domain.Author;
 import ru.agilix.bookstorage.domain.Book;
+import ru.agilix.bookstorage.domain.Comment;
 import ru.agilix.bookstorage.domain.Genre;
 
 import java.util.List;
 
-public interface UiService {
+public interface MessageCreatorService {
     String showBooksList(List<Book> books);
     
     String showBookInfo(Book book);
-
-    Book getUpdatedBookInfo(Book existingBook, List<Author> authors, List<Genre> genres);
 
     String showBookCreatedMessage(Book inserted);
 
@@ -24,4 +23,8 @@ public interface UiService {
     String showEmptyAuthorsList();
 
     String showGenreList(List<Genre> genres);
+
+    String showListOfComments(List<Comment> comments);
+
+    String showCommentInfo(Comment comment);
 }

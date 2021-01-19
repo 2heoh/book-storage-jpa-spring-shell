@@ -2,6 +2,7 @@ package ru.agilix.bookstorage.dao.dsl;
 
 import ru.agilix.bookstorage.domain.Author;
 import ru.agilix.bookstorage.domain.Book;
+import ru.agilix.bookstorage.domain.Comment;
 import ru.agilix.bookstorage.domain.Genre;
 
 import java.util.ArrayList;
@@ -11,8 +12,9 @@ public class BookBuilder {
     private String title = "no name // dsl";
     private int id = -1;
     private final List<Author> authors = new ArrayList<>();
-    private final List<Genre> genres = new ArrayList<>();
+    private Genre genre = null;
     private String description = "not set // dsl";
+    private List<Comment> comments = new ArrayList<>();
 
     public BookBuilder Title(String title) {
         this.title = title;
@@ -30,7 +32,7 @@ public class BookBuilder {
     }
 
     public BookBuilder Genre(Genre genre) {
-        this.genres.add(genre);
+        this.genre = genre;
         return this;
     }
 
@@ -39,7 +41,12 @@ public class BookBuilder {
         return this;
     }
 
+    public BookBuilder Comment(Comment comment) {
+        this.comments.add(comment);
+        return this;
+    }
+
     public Book build() {
-        return new Book(id, title, description, authors, genres);
+        return new Book(id, title, description, authors, genre, comments);
     }
 }

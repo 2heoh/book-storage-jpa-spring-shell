@@ -1,7 +1,7 @@
 package ru.agilix.bookstorage.service;
 
 public interface BooksService {
-    String createBook(String title);
+    String createBook();
 
     String retrieveBook(int id);
 
@@ -14,4 +14,8 @@ public interface BooksService {
     String showAllAuthors();
 
     String showAllGenres();
+
+    String getCommentsByBookId(int bookId);
+
+    String addCommentByBookId(int bookId);
 }

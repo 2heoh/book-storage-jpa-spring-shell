@@ -90,9 +90,9 @@ public class BookStorageCommandsTests {
         StringWriter out = new StringWriter();
         DefaultResultHandler resultHandler = createResultHandler(out);
 
-        resultHandler.handleResult(sendCommand("add book title"));
+        resultHandler.handleResult(sendCommand("add book"));
 
-        verify(service, times(1)).createBook("title");
+        verify(service, times(1)).createBook();
     }
 
     @Test
@@ -100,10 +100,10 @@ public class BookStorageCommandsTests {
         StringWriter out = new StringWriter();
         DefaultResultHandler resultHandler = createResultHandler(out);
 
-        resultHandler.handleResult(sendCommand("add pen title"));
+        resultHandler.handleResult(sendCommand("add pen"));
 
         assertThat(out.toString()).startsWith("don't know: pen");
-        verify(service, times(0)).createBook("title");
+        verify(service, times(0)).createBook();
     }
 
     @Test
@@ -136,6 +136,26 @@ public class BookStorageCommandsTests {
         verify(service, times(1)).deleteBook(1);
     }
 
+    @Test
+    void shouldDisplayCommentsForABook() {
+        StringWriter out = new StringWriter();
+        DefaultResultHandler resultHandler = createResultHandler(out);
+
+        resultHandler.handleResult(sendCommand("show comments 1"));
+
+        verify(service, times(1)).getCommentsByBookId(1);
+    }
+
+    @Test
+    void addCommentShouldCallAddNewCommentForBookService() {
+        StringWriter out = new StringWriter();
+        DefaultResultHandler resultHandler = createResultHandler(out);
+
+        resultHandler.handleResult(sendCommand("add comment 1"));
+
+        verify(service, times(1)).addCommentByBookId(1);
+    }
+
     private DefaultResultHandler createResultHandler(StringWriter out) {
         DefaultResultHandler resultHandler = new DefaultResultHandler();
         PrintWriter writer = new PrintWriter(out);
@@ -145,11 +165,6 @@ public class BookStorageCommandsTests {
     }
 
     private Object sendCommand(String command) {
-        return shell.evaluate(new Input() {
-            @Override
-            public String rawText() {
-                return command;
-            }
-        });
+        return shell.evaluate(() -> command);
     }
 }

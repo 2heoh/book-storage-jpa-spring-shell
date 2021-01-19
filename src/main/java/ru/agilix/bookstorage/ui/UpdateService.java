@@ -8,7 +8,7 @@ import java.util.List;
 public interface UpdateService {
     String getNewValueFor(String field, String oldValue);
 
-    Author getNewAuthor(List<Author> authors);
+    List<Author> getNewAuthor(List<Author> authors);
 
     Genre getNewGenre(List<Genre> genres);
 }
