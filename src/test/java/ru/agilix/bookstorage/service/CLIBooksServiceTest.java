@@ -13,10 +13,8 @@ import ru.agilix.bookstorage.dao.GenreDao;
 import ru.agilix.bookstorage.dao.dsl.Create;
 import ru.agilix.bookstorage.domain.Author;
 import ru.agilix.bookstorage.domain.Book;
-import ru.agilix.bookstorage.domain.Comment;
-import ru.agilix.bookstorage.ui.MessageCreatorService;
+import ru.agilix.bookstorage.ui.output.BookOutputService;
 
-import java.text.ParseException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,7 +37,7 @@ class CLIBooksServiceTest {
     private AuthorDao authorDao;
 
     @Mock
-    private MessageCreatorService output;
+    private BookOutputService output;
 
     @Mock
     private GenreDao genreDao;
@@ -47,12 +45,10 @@ class CLIBooksServiceTest {
     @Mock
     private InputService input;
 
-    @Mock
-    private CommentDao commentDao;
 
     @BeforeEach
     void setUp() {
-        this.service = new CLIBooksService(booksDao, output, authorDao, genreDao, commentDao, input);
+        this.service = new CLIBooksService(booksDao, genreDao, authorDao, output, input);
     }
 
     @Test
@@ -124,45 +120,4 @@ class CLIBooksServiceTest {
         verify(output, times(1)).showBookNotFound(-1);
     }
 
-    @Test
-    void showAuthorsShouldDisplayListOfAuthors() {
-        Author pushkin = new Author(1, "Александр Пушкин");
-        Author lermontov = new Author(2, "Юрий Лермонтов");
-        List<Author> list = List.of(pushkin, lermontov);
-        given(authorDao.getAll()).willReturn(list);
-
-        service.showAllAuthors();
-
-        verify(authorDao, times(1)).getAll();
-        verify(output, times(1)).showAuthorsList(list);
-    }
-
-    @Test
-    void shouldShowCommentsByBookId() {
-        final var comments = List.of(Create.Comment().Text("first").build());
-        given(commentDao.getByBookId(1)).willReturn(comments);
-
-        service.getCommentsByBookId(1);
-
-        verify(commentDao, times(1)).getByBookId(1);
-        verify(output, times(1)).showListOfComments(comments);
-    }
-
-    @Test
-    void shouldGetNewCommentAndSaveIt() throws ParseException {
-
-        Comment comment = Create.Comment()
-                .Id(0)
-                .Text("text")
-                .Author("somebody")
-                .Date("2020-01-19 10:00:00")
-                .build();
-
-        given(input.getNewComment(1)).willReturn(comment);
-
-        service.addCommentByBookId(1);
-
-        verify(input, times(1)).getNewComment(1);
-        verify(commentDao, times(1)).save(comment);
-    }
 }

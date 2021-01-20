@@ -9,10 +9,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import ru.agilix.bookstorage.dao.dsl.Create;
-import ru.agilix.bookstorage.domain.Book;
 import ru.agilix.bookstorage.domain.Comment;
 
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.List;
 
@@ -109,6 +107,33 @@ class CommentDaoTest {
         assertThat(saved.getId()).isEqualTo(id);
         assertThat(saved.getText()).isEqualTo("text");
         assertThat(saved.getAuthor()).isEqualTo("somebody");
+        assertThat(saved.getBookId()).isEqualTo(1);
+    }
+
+    @Test
+    void shouldDeleteComment() {
+        final var exiting = em.find(Comment.class, 1);
+        em.detach(exiting);
+
+        commentDao.delete(1);
+
+        assertThat(em.find(Comment.class, 1)).isNull();
+    }
+
+    @Test
+    void shouldUpdateExistingComment() {
+        final var id = 1;
+        Comment comment = commentDao.getById(id);
+        em.detach(comment);
+        comment.setAuthor("new author");
+        comment.setText("new text");
+
+        commentDao.save(comment);
+
+        val saved = em.find(Comment.class, id);
+        assertThat(saved.getId()).isEqualTo(id);
+        assertThat(saved.getText()).isEqualTo("new text");
+        assertThat(saved.getAuthor()).isEqualTo("new author");
         assertThat(saved.getBookId()).isEqualTo(1);
     }
 }

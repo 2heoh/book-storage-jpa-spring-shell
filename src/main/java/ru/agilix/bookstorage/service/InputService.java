@@ -13,4 +13,6 @@ public interface InputService {
     Book getNewBook(List<Author> authors, List<Genre> genres);
 
     Comment getNewComment(int bookId);
+
+    Comment getUpdatedComment(Comment comment);
 }

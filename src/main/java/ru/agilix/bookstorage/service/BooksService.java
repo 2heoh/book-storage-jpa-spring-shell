@@ -11,11 +11,6 @@ public interface BooksService {
 
     String deleteBook(int id);
 
-    String showAllAuthors();
 
-    String showAllGenres();
 
-    String getCommentsByBookId(int bookId);
-
-    String addCommentByBookId(int bookId);
 }

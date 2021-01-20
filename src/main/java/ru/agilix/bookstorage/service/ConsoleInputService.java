@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ConsoleInputService implements InputService{
+public class ConsoleInputService implements InputService {
     private final UpdateService updateService;
 
     public ConsoleInputService(UpdateService updateService) {
@@ -42,6 +42,13 @@ public class ConsoleInputService implements InputService{
         String author = updateService.getNewValueFor("author", "");
         String text = updateService.getNewValueFor("text", "");
         return new Comment(0, text, author, bookId, null);
+    }
+
+    @Override
+    public Comment getUpdatedComment(Comment oldComment) {
+        String author = updateService.getNewValueFor("author", oldComment.getAuthor());
+        String text = updateService.getNewValueFor("text", oldComment.getText());
+        return new Comment(oldComment.getId(), text, author, oldComment.getBookId(), null);
     }
 
 }

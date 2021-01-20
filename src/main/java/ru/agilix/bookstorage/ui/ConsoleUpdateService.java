@@ -6,7 +6,6 @@ import ru.agilix.bookstorage.domain.Genre;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ConsoleUpdateService implements UpdateService {
@@ -20,7 +19,12 @@ public class ConsoleUpdateService implements UpdateService {
     @Override
     public String getNewValueFor(String field, String oldValue) {
         readerWriter.putString(String.format("Enter new %s [%s]: ", field, oldValue));
-        return readerWriter.getString();
+
+        final var newValue = readerWriter.getString();
+        if (newValue.equals("")) {
+            return oldValue;
+        }
+        return newValue;
     }
 
     @Override

@@ -6,6 +6,7 @@ import ru.agilix.bookstorage.domain.Comment;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.sql.Timestamp;
 import java.util.List;
@@ -32,7 +33,20 @@ public class CommentDaoJpa implements CommentDao {
             comment.setDate(new Timestamp(System.currentTimeMillis()));
             em.persist(comment);
             return comment;
+        } else {
+            return em.merge(comment);
         }
-        return null;
+    }
+
+    @Override
+    public void delete(int id) {
+        Query query = em.createQuery("delete from Comment c where c.id=:id");
+        query.setParameter("id", id);
+        query.executeUpdate();
+    }
+
+    @Override
+    public Comment getById(int id) {
+        return em.find(Comment.class, id);
     }
 }

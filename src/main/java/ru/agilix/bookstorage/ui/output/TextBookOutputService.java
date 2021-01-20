@@ -1,17 +1,15 @@
-package ru.agilix.bookstorage.ui;
+package ru.agilix.bookstorage.ui.output;
 
 import de.vandermeer.asciitable.AsciiTable;
 import org.springframework.stereotype.Service;
 import ru.agilix.bookstorage.domain.Author;
 import ru.agilix.bookstorage.domain.Book;
-import ru.agilix.bookstorage.domain.Comment;
-import ru.agilix.bookstorage.domain.Genre;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class TextOutputService implements MessageCreatorService {
+public class TextBookOutputService extends OutputMessage implements BookOutputService {
 
     @Override
     public String showBooksList(List<Book> books) {
@@ -67,15 +65,6 @@ public class TextOutputService implements MessageCreatorService {
         return table.render();
     }
 
-    private String renderMessage(String message) {
-        AsciiTable table = new AsciiTable();
-        table.addRule();
-        table.addRow(message);
-        table.addRule();
-        return table.render();
-    }
-
-
     @Override
     public String showBookCreatedMessage(Book inserted) {
         return render("Created book:", List.of(String.format("#%d %s", inserted.getId(), inserted.getTitle())));
@@ -91,73 +80,9 @@ public class TextOutputService implements MessageCreatorService {
         return renderMessage(String.format("Book not found: #%d", id));
     }
 
-    @Override
-    public String showAuthorsList(List<Author> list) {
-        AsciiTable table = new AsciiTable();
-        table.addRule();
-        table.addRow(null, "List of authors:");
-        table.addRule();
-        table.addRow("id", "name");
-        table.addRule();
-        for (Author author : list) {
-            table.addRow(String.valueOf(author.getId()), author.getName());
-        }
-        table.addRule();
-        return table.render();
-    }
 
-    @Override
-    public String showEmptyAuthorsList() {
-        return renderMessage("Authors not found.");
-    }
 
-    @Override
-    public String showGenreList(List<Genre> genres) {
-        AsciiTable table = new AsciiTable();
-        table.addRule();
-        table.addRow(null, "List of genres:");
-        table.addRule();
-        table.addRow("id", "name");
 
-        table.addRule();
-        for (Genre author : genres) {
-            table.addRow(String.valueOf(author.getId()), author.getName());
-        }
-        table.addRule();
-        return table.render();
-
-    }
-
-    @Override
-    public String showListOfComments(List<Comment> comments) {
-
-        String result = renderMessage("Comments:") + "\n";
-
-        for (Comment comment : comments) {
-
-            result += renderMessage(String.format(
-                    "#%s '%s' said at %s: %s",
-                    comment.getId(),
-                    comment.getAuthor(),
-                    comment.getDate(),
-                    comment.getText())) + "\n";
-        }
-
-        return result;
-    }
-
-    @Override
-    public String showCommentInfo(Comment comment) {
-        AsciiTable table = new AsciiTable();
-        table.addRule();
-        table.addRow(null, "New comment #" + comment.getId());
-        table.addRule();
-        table.addRow(
-                String.format("%s said at %s", comment.getAuthor(), comment.getDate()),
-                comment.getText());
-        table.addRule();
-        return table.render();
-    }
 
 
 }

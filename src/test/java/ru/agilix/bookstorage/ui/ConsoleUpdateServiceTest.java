@@ -43,6 +43,16 @@ class ConsoleUpdateServiceTest {
     }
 
     @Test
+    void shouldKeepOldValueWhenPassedEmptyString() {
+        given(ioService.getString()).willReturn("");
+
+        String newTitle = updateService.getNewValueFor("a","b");
+
+        verify(ioService).putString("Enter new a [b]: ");
+        assertThat(newTitle).isEqualTo("b");
+    }
+
+    @Test
     void shouldDisplayErrorWhenThereIsNoSuchAuthor() {
         given(ioService.getString()).willReturn("-1");
 

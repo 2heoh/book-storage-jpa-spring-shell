@@ -1,15 +1,18 @@
 package ru.agilix.bookstorage.shell;
 
 import org.jline.terminal.Terminal;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.shell.Input;
 import org.springframework.shell.Shell;
 import org.springframework.shell.result.DefaultResultHandler;
+import ru.agilix.bookstorage.service.AuthorsService;
 import ru.agilix.bookstorage.service.BooksService;
+import ru.agilix.bookstorage.service.CommentsService;
+import ru.agilix.bookstorage.service.GenresService;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -29,7 +32,24 @@ public class BookStorageCommandsTests {
     private Terminal terminal;
 
     @MockBean
-    private BooksService service;
+    private BooksService booksService;
+
+    @MockBean
+    private CommentsService commentsService;
+
+    @MockBean
+    private AuthorsService authorsService;
+
+    @MockBean
+    private GenresService genresService;
+
+
+    private DefaultResultHandler resultHandler;
+
+    @BeforeEach
+    void setUp() {
+        resultHandler = createResultHandler(new StringWriter());
+    }
 
     @Test
     public void commandHelpDisplaysHelpStartingWithAvailableCommands() {
@@ -62,7 +82,7 @@ public class BookStorageCommandsTests {
 
         resultHandler.handleResult(sendCommand("show books all"));
 
-        verify(service, times(1)).retrieveAllBooks();
+        verify(booksService, times(1)).retrieveAllBooks();
     }
 
     @Test
@@ -72,7 +92,7 @@ public class BookStorageCommandsTests {
 
         resultHandler.handleResult(sendCommand("show authors all"));
 
-        verify(service, times(1)).showAllAuthors();
+        verify(authorsService, times(1)).showAllAuthors();
     }
 
     @Test
@@ -82,7 +102,7 @@ public class BookStorageCommandsTests {
 
         resultHandler.handleResult(sendCommand("show genres all"));
 
-        verify(service, times(1)).showAllGenres();
+        verify(genresService, times(1)).showAllGenres();
     }
 
     @Test
@@ -92,7 +112,7 @@ public class BookStorageCommandsTests {
 
         resultHandler.handleResult(sendCommand("add book"));
 
-        verify(service, times(1)).createBook();
+        verify(booksService, times(1)).createBook();
     }
 
     @Test
@@ -103,7 +123,7 @@ public class BookStorageCommandsTests {
         resultHandler.handleResult(sendCommand("add pen"));
 
         assertThat(out.toString()).startsWith("don't know: pen");
-        verify(service, times(0)).createBook();
+        verify(booksService, times(0)).createBook();
     }
 
     @Test
@@ -113,7 +133,7 @@ public class BookStorageCommandsTests {
 
         resultHandler.handleResult(sendCommand("show book 1"));
 
-        verify(service, times(1)).retrieveBook(1);
+        verify(booksService, times(1)).retrieveBook(1);
     }
 
     @Test
@@ -123,7 +143,7 @@ public class BookStorageCommandsTests {
 
         resultHandler.handleResult(sendCommand("update book 1"));
 
-        verify(service, times(1)).updateBook(1);
+        verify(booksService, times(1)).updateBook(1);
     }
 
     @Test
@@ -133,7 +153,17 @@ public class BookStorageCommandsTests {
 
         resultHandler.handleResult(sendCommand("delete book 1"));
 
-        verify(service, times(1)).deleteBook(1);
+        verify(booksService, times(1)).deleteBook(1);
+    }
+
+    @Test
+    void shouldDeleteComment() {
+        StringWriter out = new StringWriter();
+        DefaultResultHandler resultHandler = createResultHandler(out);
+
+        resultHandler.handleResult(sendCommand("delete comment 1"));
+
+        verify(commentsService, times(1)).deleteComment(1);
     }
 
     @Test
@@ -143,7 +173,7 @@ public class BookStorageCommandsTests {
 
         resultHandler.handleResult(sendCommand("show comments 1"));
 
-        verify(service, times(1)).getCommentsByBookId(1);
+        verify(commentsService, times(1)).getCommentsByBookId(1);
     }
 
     @Test
@@ -153,7 +183,14 @@ public class BookStorageCommandsTests {
 
         resultHandler.handleResult(sendCommand("add comment 1"));
 
-        verify(service, times(1)).addCommentByBookId(1);
+        verify(commentsService, times(1)).addCommentByBookId(1);
+    }
+
+    @Test
+    void shouldUpdateComment() {
+        resultHandler.handleResult(sendCommand("update comment 1"));
+
+        verify(commentsService, times(1)).updateComment(1);
     }
 
     private DefaultResultHandler createResultHandler(StringWriter out) {

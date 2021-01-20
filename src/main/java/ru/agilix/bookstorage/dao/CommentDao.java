@@ -8,4 +8,8 @@ public interface CommentDao {
     List<Comment> getByBookId(int bookId);
 
     Comment save(Comment comment);
+
+    void delete(int id);
+
+    Comment getById(int id);
 }

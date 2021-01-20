@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 @Service
-public class CLIService implements IOService {
+public class CommandLineIOService implements IOService {
 
     @Override
     public String getString() {

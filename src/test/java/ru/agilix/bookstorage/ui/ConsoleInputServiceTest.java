@@ -13,7 +13,6 @@ import ru.agilix.bookstorage.domain.Genre;
 import ru.agilix.bookstorage.service.ConsoleInputService;
 import ru.agilix.bookstorage.service.InputService;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,5 +90,25 @@ public class ConsoleInputServiceTest {
         assertThat(comment.getText()).isEqualTo("some");
         assertThat(comment.getBookId()).isEqualTo(1);
         assertThat(comment.getDate()).isEqualTo(null);
+    }
+
+    @Test
+    void shouldReturnUpdatedComment() {
+        Comment oldComment = Create.Comment()
+                                        .Id(1)
+                                        .BookId(2)
+                                        .Text("old text")
+                                        .Author("old author")
+                                        .build();
+
+        given(updateService.getNewValueFor("text", oldComment.getText())).willReturn("new text");
+        given(updateService.getNewValueFor("author", oldComment.getAuthor())).willReturn("new author");
+
+        final var comment = input.getUpdatedComment(oldComment);
+
+        assertThat(comment.getId()).isEqualTo(1);
+        assertThat(comment.getAuthor()).isEqualTo("new author");
+        assertThat(comment.getText()).isEqualTo("new text");
+        assertThat(comment.getBookId()).isEqualTo(2);
     }
 }

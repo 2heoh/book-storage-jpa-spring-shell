@@ -5,28 +5,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.agilix.bookstorage.dao.AuthorDao;
 import ru.agilix.bookstorage.dao.BooksDao;
-import ru.agilix.bookstorage.dao.CommentDao;
 import ru.agilix.bookstorage.dao.GenreDao;
-import ru.agilix.bookstorage.domain.Author;
 import ru.agilix.bookstorage.domain.Book;
-import ru.agilix.bookstorage.ui.MessageCreatorService;
+import ru.agilix.bookstorage.ui.output.BookOutputService;
 
 import java.util.List;
 
 @Service
 public class CLIBooksService implements BooksService {
     private final BooksDao booksDao;
-    private final AuthorDao authorDao;
     private final GenreDao genreDao;
-    private final CommentDao commentDao;
-    private final MessageCreatorService ui;
+    private final AuthorDao authorDao;
+    private final BookOutputService ui;
     private final InputService input;
 
-    public CLIBooksService(BooksDao booksDao, MessageCreatorService ui, AuthorDao authorDao, GenreDao genreDao, CommentDao commentDao, InputService input) {
+    public CLIBooksService(BooksDao booksDao, GenreDao genreDao, AuthorDao authorDao, BookOutputService ui, InputService input) {
         this.booksDao = booksDao;
-        this.authorDao = authorDao;
         this.genreDao = genreDao;
-        this.commentDao = commentDao;
+        this.authorDao = authorDao;
         this.ui = ui;
         this.input = input;
     }
@@ -78,34 +74,6 @@ public class CLIBooksService implements BooksService {
         return ui.showBookDeletedMessage(id);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public String showAllAuthors() {
-        List<Author> authors = authorDao.getAll();
 
-        if (authors.isEmpty())
-            return ui.showEmptyAuthorsList();
 
-        return ui.showAuthorsList(authors);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public String showAllGenres() {
-        return ui.showGenreList(genreDao.getAll());
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public String getCommentsByBookId(int bookId) {
-        return ui.showListOfComments(commentDao.getByBookId(bookId));
-    }
-
-    @Override
-    @Transactional
-    public String addCommentByBookId(int bookId) {
-        final var newComment = input.getNewComment(bookId);
-        final var comment = commentDao.save(newComment);
-        return ui.showCommentInfo(comment);
-    }
 }
