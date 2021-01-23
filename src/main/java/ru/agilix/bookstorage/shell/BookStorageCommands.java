@@ -33,7 +33,7 @@ public class BookStorageCommands {
         } else if (first.equals("book")) {
             return books.retrieveBook(Integer.parseInt(second));
         } else if (first.equals("comments")) {
-            return comments.getCommentsByBookId(Integer.parseInt(second));
+            return books.getCommentsByBookId(Integer.parseInt(second));
         }
 
         return "don't know: " + first;

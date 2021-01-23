@@ -11,6 +11,5 @@ public interface BooksService {
 
     String deleteBook(int id);
 
-
-
+    String getCommentsByBookId(int bookId);
 }

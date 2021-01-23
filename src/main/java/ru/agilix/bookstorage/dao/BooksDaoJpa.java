@@ -5,7 +5,6 @@ import ru.agilix.bookstorage.domain.Book;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -42,8 +41,6 @@ public class BooksDaoJpa implements BooksDao {
 
     @Override
     public void delete(int id) {
-        Query query = em.createQuery("delete from Book b where b.id=:id");
-        query.setParameter("id", id);
-        query.executeUpdate();
+        em.remove(getById(id));
     }
 }

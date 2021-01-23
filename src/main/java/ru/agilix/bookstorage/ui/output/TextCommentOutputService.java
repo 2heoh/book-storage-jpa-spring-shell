@@ -9,23 +9,7 @@ import java.util.List;
 @Service
 public class TextCommentOutputService extends OutputMessage implements CommentOutputService {
 
-    @Override
-    public String showListOfComments(List<Comment> comments) {
 
-        String result = renderMessage("Comments:") + "\n";
-
-        for (Comment comment : comments) {
-
-            result += renderMessage(String.format(
-                    "#%s '%s' said at %s: %s",
-                    comment.getId(),
-                    comment.getAuthor(),
-                    comment.getDate(),
-                    comment.getText())) + "\n";
-        }
-
-        return result;
-    }
     @Override
     public String showCommentInfo(Comment comment) {
         AsciiTable table = new AsciiTable();

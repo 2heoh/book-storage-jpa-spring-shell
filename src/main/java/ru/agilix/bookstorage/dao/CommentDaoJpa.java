@@ -18,16 +18,6 @@ public class CommentDaoJpa implements CommentDao {
     private EntityManager em;
 
     @Override
-    public List<Comment> getByBookId(int bookId) {
-        TypedQuery<Comment> query = em.createQuery(
-            "select c from Comment c where c.bookId=:book_id order by c.date desc",
-            Comment.class
-        );
-        query.setParameter("book_id", bookId);
-        return query.getResultList();
-    }
-
-    @Override
     public Comment save(Comment comment) {
         if (comment.getId() == 0) {
             comment.setDate(new Timestamp(System.currentTimeMillis()));
@@ -40,9 +30,7 @@ public class CommentDaoJpa implements CommentDao {
 
     @Override
     public void delete(int id) {
-        Query query = em.createQuery("delete from Comment c where c.id=:id");
-        query.setParameter("id", id);
-        query.executeUpdate();
+        em.remove(em.find(Comment.class, id));
     }
 
     @Override

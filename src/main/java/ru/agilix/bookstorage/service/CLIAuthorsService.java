@@ -1,7 +1,6 @@
 package ru.agilix.bookstorage.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.agilix.bookstorage.dao.AuthorDao;
 import ru.agilix.bookstorage.domain.Author;
 import ru.agilix.bookstorage.ui.output.AuthorOutputService;
@@ -19,7 +18,6 @@ public class CLIAuthorsService implements AuthorsService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public String showAllAuthors() {
         List<Author> authors = authorDao.getAll();
 

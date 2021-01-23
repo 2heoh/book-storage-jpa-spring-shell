@@ -74,6 +74,10 @@ public class CLIBooksService implements BooksService {
         return ui.showBookDeletedMessage(id);
     }
 
-
+    @Override
+    @Transactional(readOnly = true)
+    public String getCommentsByBookId(int bookId) {
+        return ui.showListOfComments(booksDao.getById(bookId).getComments());
+    }
 
 }

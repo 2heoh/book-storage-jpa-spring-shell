@@ -57,7 +57,7 @@ public class BooksDaoJpaTest {
 
         val books = bookDao.getAll();
 
-        assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(2);
+        assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(1);
         assertThat(books).hasSize(2).matches( b -> b.contains(viy));
     }
 
@@ -133,4 +133,6 @@ public class BooksDaoJpaTest {
 
         assertThrows( BookNotFoundException.class, () ->  bookDao.getById(1));
     }
+
+
 }

@@ -58,7 +58,7 @@ class CommentDaoTest {
     @Test
     void shouldGetAllCommentsByBookId() {
 
-        val comments = commentDao.getByBookId(1);
+        val comments = bookDao.getById(1).getComments();
 
         assertThat(comments)
                 .hasSize(2)
@@ -80,10 +80,9 @@ class CommentDaoTest {
 
     @Test
     void shouldReturnCommentsInReverseDateOrder() {
-
         val expectedOrder= List.of(second, first);
 
-        final var comments = commentDao.getByBookId(1);
+        final var comments = bookDao.getById(1).getComments();
 
         assertThat(comments).containsExactlyElementsOf(expectedOrder);
     }

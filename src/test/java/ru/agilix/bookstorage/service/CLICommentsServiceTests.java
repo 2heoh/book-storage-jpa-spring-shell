@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.agilix.bookstorage.dao.BooksDao;
 import ru.agilix.bookstorage.dao.CommentDao;
+import ru.agilix.bookstorage.dao.dsl.BookBuilder;
 import ru.agilix.bookstorage.dao.dsl.Create;
 import ru.agilix.bookstorage.domain.Comment;
 import ru.agilix.bookstorage.ui.output.CommentOutputService;
@@ -37,16 +39,6 @@ public class CLICommentsServiceTests {
     }
 
 
-    @Test
-    void shouldShowCommentsByBookId() {
-        final var comments = List.of(Create.Comment().Text("first").build());
-        given(commentDao.getByBookId(1)).willReturn(comments);
-
-        service.getCommentsByBookId(1);
-
-        verify(commentDao, times(1)).getByBookId(1);
-        verify(output, times(1)).showListOfComments(comments);
-    }
 
     @Test
     void shouldGetNewCommentAndSaveIt() throws ParseException {

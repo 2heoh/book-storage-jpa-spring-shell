@@ -31,11 +31,12 @@ public class Book {
     @Fetch(FetchMode.SUBSELECT)
     private List<Author> authors;
 
-    @ManyToOne(targetEntity = Genre.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = Genre.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "genre_id")
     private Genre genre;
 
     @OneToMany(targetEntity = Comment.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "book_id")
+    @OrderBy("date desc ")
     private List<Comment> comments;
 }

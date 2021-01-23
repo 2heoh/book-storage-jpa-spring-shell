@@ -4,6 +4,7 @@ import de.vandermeer.asciitable.AsciiTable;
 import org.springframework.stereotype.Service;
 import ru.agilix.bookstorage.domain.Author;
 import ru.agilix.bookstorage.domain.Book;
+import ru.agilix.bookstorage.domain.Comment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,9 +81,22 @@ public class TextBookOutputService extends OutputMessage implements BookOutputSe
         return renderMessage(String.format("Book not found: #%d", id));
     }
 
+    @Override
+    public String showListOfComments(List<Comment> comments) {
 
+        String result = renderMessage("Comments:") + "\n";
 
+        for (Comment comment : comments) {
 
+            result += renderMessage(String.format(
+                    "#%s '%s' said at %s: %s",
+                    comment.getId(),
+                    comment.getAuthor(),
+                    comment.getDate(),
+                    comment.getText())) + "\n";
+        }
 
+        return result;
+    }
 
 }

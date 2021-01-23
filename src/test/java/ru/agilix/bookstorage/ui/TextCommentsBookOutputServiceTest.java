@@ -23,34 +23,8 @@ public class TextCommentsBookOutputServiceTest {
     void setUp() {
         ui = new TextCommentOutputService();
     }
-    @Test
-    void showListOfComments() throws ParseException {
-        Comment first = Create.Comment()
-                .Id(1)
-                .Author("John Doe")
-                .Text("first")
-                .Date("2021-01-19 10:00:00")
-                .build();
-
-        Comment second = Create.Comment()
-                .Id(2)
-                .Author("John Doe")
-                .Text("second")
-                .Date("2021-01-19 11:00:00")
-                .build();
-
-        val comments = List.of(first, second);
 
 
-        val result = ui.showListOfComments(comments);
-
-        assertThat(result)
-                .contains("Comments:")
-                .contains("#1 'John Doe' said at 2021-01-19 10:00:00")
-                .contains("first")
-                .contains("#2 'John Doe' said at 2021-01-19 11:00:00")
-                .contains("second");
-    }
 
     @Test
     void shouldDisplayNewComment() throws ParseException {

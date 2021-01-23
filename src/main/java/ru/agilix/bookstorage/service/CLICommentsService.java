@@ -2,6 +2,8 @@ package ru.agilix.bookstorage.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.agilix.bookstorage.dao.BooksDao;
+import ru.agilix.bookstorage.dao.BooksDaoJpa;
 import ru.agilix.bookstorage.dao.CommentDao;
 import ru.agilix.bookstorage.ui.output.CommentOutputService;
 
@@ -10,6 +12,7 @@ public class CLICommentsService implements CommentsService {
     private final CommentDao commentDao;
     private final CommentOutputService ui;
     private final InputService input;
+    private BooksDao bookDao;
 
     public CLICommentsService(CommentDao commentDao, CommentOutputService ui, InputService input) {
         this.commentDao = commentDao;
@@ -17,11 +20,7 @@ public class CLICommentsService implements CommentsService {
         this.input = input;
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public String getCommentsByBookId(int bookId) {
-        return ui.showListOfComments(commentDao.getByBookId(bookId));
-    }
+
 
     @Override
     @Transactional

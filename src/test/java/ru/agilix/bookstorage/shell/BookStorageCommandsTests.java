@@ -173,7 +173,7 @@ public class BookStorageCommandsTests {
 
         resultHandler.handleResult(sendCommand("show comments 1"));
 
-        verify(commentsService, times(1)).getCommentsByBookId(1);
+        verify(booksService, times(1)).getCommentsByBookId(1);
     }
 
     @Test

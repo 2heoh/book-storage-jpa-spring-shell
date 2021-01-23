@@ -120,4 +120,17 @@ class CLIBooksServiceTest {
         verify(output, times(1)).showBookNotFound(-1);
     }
 
+    @Test
+    void shouldShowCommentsByBookId() {
+        final var comment = Create.Comment().Text("first").build();
+        final var book = Create.Book().Comment(comment).build();
+        given(booksDao.getById(1)).willReturn(book);
+//        given(bookDao.getById(1).getComments()).willReturn(comments);
+
+        service.getCommentsByBookId(1);
+
+        verify(booksDao, times(1)).getById(1);
+        verify(output, times(1)).showListOfComments(List.of(comment));
+    }
+
 }
