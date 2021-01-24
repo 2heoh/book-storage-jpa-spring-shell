@@ -3,7 +3,6 @@ package ru.agilix.bookstorage.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.agilix.bookstorage.dao.BooksDao;
-import ru.agilix.bookstorage.dao.BooksDaoJpa;
 import ru.agilix.bookstorage.dao.CommentDao;
 import ru.agilix.bookstorage.ui.output.CommentOutputService;
 

@@ -6,9 +6,8 @@ import ru.agilix.bookstorage.ui.output.GenreOutputService;
 
 @Service
 public class CLIGenresService implements GenresService {
-
-    private GenreOutputService ui;
-    private GenreDao genreDao;
+    private final GenreOutputService ui;
+    private final GenreDao genreDao;
 
     public CLIGenresService(GenreOutputService ui, GenreDao genreDao) {
         this.ui = ui;

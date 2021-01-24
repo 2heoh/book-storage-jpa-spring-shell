@@ -37,7 +37,6 @@ public class CLIBooksService implements BooksService {
     }
 
     @Override
-    @Transactional
     public String retrieveAllBooks() {
         List<Book> bookList = booksDao.getAll();
         return ui.showBooksList(bookList);
