@@ -3,10 +3,16 @@ package ru.agilix.bookstorage.ui.output;
 import de.vandermeer.asciitable.AsciiTable;
 
 public class OutputMessage {
-    public String renderMessage(String message) {
+    private final String text;
+
+    public OutputMessage(String text) {
+        this.text = text;
+    }
+
+    public String render() {
         AsciiTable table = new AsciiTable();
         table.addRule();
-        table.addRow(message);
+        table.addRow(text);
         table.addRule();
         return table.render();
     }
