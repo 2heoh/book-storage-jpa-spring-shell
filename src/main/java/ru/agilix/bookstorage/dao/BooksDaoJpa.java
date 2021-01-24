@@ -1,6 +1,6 @@
 package ru.agilix.bookstorage.dao;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import ru.agilix.bookstorage.domain.Book;
 
 import javax.persistence.EntityManager;
@@ -8,7 +8,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-@Repository
+@Service
 public class BooksDaoJpa implements BooksDao {
     @PersistenceContext
     private EntityManager em;

@@ -1,17 +1,14 @@
 package ru.agilix.bookstorage.dao;
 
 
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import ru.agilix.bookstorage.domain.Comment;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import java.sql.Timestamp;
-import java.util.List;
 
-@Repository
+@Service
 public class CommentDaoJpa implements CommentDao {
 
     @PersistenceContext
