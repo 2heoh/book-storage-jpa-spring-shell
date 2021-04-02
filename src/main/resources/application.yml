@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:booksdb
+  h2:
+    console:
+      enabled: true
+  liquibase:
+    change-log: db/changelog/db.changelog.yml
+    enabled: true
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
